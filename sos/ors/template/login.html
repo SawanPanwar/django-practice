@@ -5,17 +5,24 @@
     <title>Title</title>
 </head>
 <body>
-<form>
+{% include 'header.html' %}
+<form method="POST">
+    {% csrf_token %}
     <div align="center">
         <h1>Login</h1>
+        <div style="height: 30px;">
+            <h3><font color="green">{{ form.message }}</font></h3>
+        </div>
         <table>
             <tr>
                 <th>Login ID:</th>
-                <td><input type="text"></td>
+                <td><input type="text" name="loginId" value="{{ form.login_id }}"></td>
+                <td style="position: fixed;"><font color="red">{{ form.input_error.login_id }}</font></td>
             </tr>
             <tr>
                 <th>Password:</th>
-                <td><input type="password"></td>
+                <td><input type="password" name="password" value="{{ form.password }}"></td>
+                <td style="position: fixed;"><font color="red">{{ form.input_error.password }}</font></td>
             </tr>
             <tr>
                 <th></th>
