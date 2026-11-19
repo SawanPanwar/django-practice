@@ -20,6 +20,9 @@ def user_signup(request):
     form['input_error'] = {}
     form['input_error']['error'] = False
 
+    if request.method == "GET":
+        return render(request, 'registration.html', {'form': form})
+
     if request.method == "POST":
         form['first_name'] = request.POST.get('firstName', '')
         form['last_name'] = request.POST.get('lastName', '')
@@ -52,16 +55,18 @@ def user_signup(request):
             form['input_error']['address'] = 'Address is required'
             form['input_error']['error'] = True
 
-        if not form['input_error']['error']:
-            try:
-                UserService().add(form)
-                form['error'] = False
-                form['message'] = 'User Registration Successfully...!!!'
-            except Exception as e:
-                form['error'] = True
-                form['message'] = str(e)
+        if form['input_error']['error']:
+            return render(request, 'registration.html', {'form': form})
 
-    return render(request, 'registration.html', {'form': form})
+        try:
+            UserService().add(form)
+            form['error'] = False
+            form['message'] = 'User Registration Successfully...!!!'
+        except Exception as e:
+            form['error'] = True
+            form['message'] = str(e)
+
+        return render(request, 'registration.html', {'form': form})
 
 
 def user_signin(request):
@@ -69,6 +74,9 @@ def user_signin(request):
     form['message'] = ''
     form['input_error'] = {}
     form['input_error']['error'] = False
+
+    if request.method == "GET":
+        return render(request, 'login.html', {'form': form})
 
     if request.method == "POST":
         form['login_id'] = request.POST.get('loginId', '')
@@ -82,18 +90,21 @@ def user_signin(request):
             form['input_error']['password'] = 'Password is required'
             form['input_error']['error'] = True
 
-        if not form['input_error']['error']:
-            user_list = UserService().authenticate(form['login_id'], form['password'])
+        if form['input_error']['error']:
+            return render(request, 'login.html', {'form': form})
 
-            if user_list:
-                request.session['first_name'] = user_list[0].get('first_name')
-                # return render(request, 'welcome.html', {'first_name': user_list[0].get('first_name')})
-                return redirect('/ors/welcome/')
-            else:
-                form['error'] = True
-                form['message'] = 'Login ID & Password Invalid'
+        user_list = UserService().authenticate(form['login_id'], form['password'])
 
-    return render(request, 'login.html', {'form': form})
+        if user_list:
+            request.session['first_name'] = user_list[0].get('first_name')
+            # return render(request, 'welcome.html', {'first_name': user_list[0].get('first_name')})
+            return redirect('/ors/welcome/')
+        else:
+            form['error'] = True
+            form['message'] = 'Login ID & Password Invalid'
+
+        return render(request, 'login.html', {'form': form})
+
 
 def user_logout(request):
     request.session['first_name'] = None

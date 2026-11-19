@@ -1,3 +1,6 @@
+import re
+
+
 class DataValidator:
 
     @staticmethod
@@ -13,3 +16,17 @@ class DataValidator:
             return False
         else:
             return True
+
+    @classmethod
+    def is_email(self, val):
+        if re.match("[^@]+@[^@]+\.[^@]+", val):
+            return True
+        else:
+            return False
+
+    @classmethod
+    def is_alphabet(self, val):
+        if re.match("^[a-zA-z\s]+$", val):
+            return True
+        else:
+            return False
