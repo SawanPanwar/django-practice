@@ -86,9 +86,16 @@ def user_signin(request):
             user_list = UserService().authenticate(form['login_id'], form['password'])
 
             if user_list:
+                request.session['first_name'] = user_list[0].get('first_name')
+                # return render(request, 'welcome.html', {'first_name': user_list[0].get('first_name')})
                 return redirect('/ors/welcome/')
             else:
                 form['error'] = True
                 form['message'] = 'Login ID & Password Invalid'
 
     return render(request, 'login.html', {'form': form})
+
+def user_logout(request):
+    request.session['first_name'] = None
+    request.session.flush()
+    return redirect('/ors/signin/')
