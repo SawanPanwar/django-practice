@@ -28,21 +28,21 @@
             <th>FirstName</th>
             <th>LastName</th>
             <th>LoginId</th>
-            <th>Password</th>
+<!--            <th>Password</th>-->
             <th>DOB</th>
             <th>Address</th>
             <th>Edit | Delete</th>
         </tr>
         {% for l in form.list %}
         <tr align="center">
-            <td>{{ l.id }}</td>
+            <td>{{ form.index|add:forloop.counter }}</td>
             <td>{{ l.first_name }}</td>
             <td>{{ l.last_name }}</td>
             <td>{{ l.login_id }}</td>
-            <td>{{ l.password }}</td>
+<!--            <td>{{ l.password }}</td>-->
             <td>{{ l.dob }}</td>
             <td>{{ l.address }}</td>
-            <td><a href="#">edit</a> | <a href="#">delete</a>
+            <td><a href="/ors/save/{{l.id}}/">edit</a> | <a href="/ors/delete/{{l.id}}/">delete</a>
             </td>
         </tr>
         {% endfor %}
