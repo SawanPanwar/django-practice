@@ -46,30 +46,30 @@ def dict_to_form(user_data):
 
 
 def user_signup_validate(request):
-    input_error = {}
-    input_error['error'] = False
 
-    if (DataValidator.is_null(request.POST.get("firstName", ''))):
+    input_error = {'error': False}
+
+    if DataValidator.is_null(request.POST.get('firstName', '')):
         input_error['first_name'] = 'First Name is required'
         input_error['error'] = True
 
-    if (DataValidator.is_null(request.POST.get("lastName", ''))):
+    if DataValidator.is_null(request.POST.get('lastName', '')):
         input_error['last_name'] = 'Last Name is required'
         input_error['error'] = True
 
-    if (DataValidator.is_null(request.POST.get("loginId", ''))):
+    if DataValidator.is_null(request.POST.get('loginId', '')):
         input_error['login_id'] = 'Login ID is required'
         input_error['error'] = True
 
-    if (DataValidator.is_null(request.POST.get("password", ''))):
+    if DataValidator.is_null(request.POST.get('password', '')):
         input_error['password'] = 'Password is required'
         input_error['error'] = True
 
-    if (DataValidator.is_null(request.POST.get("dob", ''))):
+    if DataValidator.is_null(request.POST.get('dob', '')):
         input_error['dob'] = 'DOB is required'
         input_error['error'] = True
 
-    if (DataValidator.is_null(request.POST.get("address", ''))):
+    if DataValidator.is_null(request.POST.get('address', '')):
         input_error['address'] = 'Address is required'
         input_error['error'] = True
 
@@ -77,14 +77,14 @@ def user_signup_validate(request):
 
 
 def user_signin_validate(request):
-    input_error = {}
-    input_error['error'] = False
 
-    if (DataValidator.is_null(request.POST.get("loginId", ''))):
+    input_error = {'error': False}
+
+    if DataValidator.is_null(request.POST.get('loginId', '')):
         input_error['login_id'] = 'Login ID is required'
         input_error['error'] = True
 
-    if (DataValidator.is_null(request.POST.get("password", ''))):
+    if DataValidator.is_null(request.POST.get('password', '')):
         input_error['password'] = 'Password is required'
         input_error['error'] = True
 
@@ -106,9 +106,7 @@ def user_signup(request):
 
     if request.method == "POST":
         form = init_form()
-
         form.update(request_to_form(request))
-
         form['input_error'] = user_signup_validate(request)
 
         if form['input_error']['error']:
@@ -126,13 +124,17 @@ def user_signup(request):
         return render(request, 'registration.html', {'form': form})
 
 
+
 def user_signin(request):
+
     if request.method == "GET":
         form = init_form()
+
         return render(request, 'login.html', {'form': form})
 
     if request.method == "POST":
         form = init_form()
+
         form['login_id'] = request.POST.get('loginId', '')
         form['password'] = request.POST.get('password', '')
 
@@ -141,15 +143,11 @@ def user_signin(request):
         if form['input_error']['error']:
             return render(request, 'login.html', {'form': form})
 
-        user_list = UserService().authenticate(form['login_id'],form['password'])
+        user_list = UserService().authenticate(form['login_id'], form['password'])
 
         if user_list:
             request.session['first_name'] = user_list[0].get('first_name')
-
-            # return render(request, 'welcome.html', {'first_name': user_list[0].get('first_name')})
-
             return redirect('/ors/welcome/')
-
         else:
             form['error'] = True
             form['message'] = 'Login ID & Password Invalid'
@@ -157,10 +155,10 @@ def user_signin(request):
         return render(request, 'login.html', {'form': form})
 
 
+
 def user_logout(request):
     request.session['first_name'] = None
     request.session.flush()
-
     return redirect('/ors/signin/')
 
 
@@ -211,7 +209,6 @@ def user_list(request):
 
 def delete_user(request, id=0):
     UserService().delete(id)
-
     return redirect('/ors/list/')
 
 
